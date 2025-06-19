@@ -1,4 +1,4 @@
-class PowerSystem:
+class Power_Subsystem:
     def __init__(self):
         self.battery_level = 100.0
         self.solar_charging = False
