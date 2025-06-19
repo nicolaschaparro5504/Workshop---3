@@ -1,5 +1,6 @@
 import math as m
-
+import time
+from power_subsystem import Power_Subsystem
 class Spacecraft:
     def __init__(self, norad_id, name, orbital_altitude, orbital_period, mass, mission, country):
 
@@ -22,3 +23,10 @@ class Spacecraft:
         self.mass = mass
         self.mission = mission
         self.country = country
+
+        #Attaching the power subsystem
+        self.power_subsystem = Power_Subsystem()
+    
+    def get_battery_status(self):
+        print(f"[Battery] Current Percentage: {self.power_system.get_battery_level():.2f}%")
+    
