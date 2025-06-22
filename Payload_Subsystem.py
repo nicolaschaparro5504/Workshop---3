@@ -1,10 +1,14 @@
 class Payload_Subsystem:
-    def __init__(self, payload_type="SAR Radar"):
-        self.active = False
-        self.payload_type = payload_type
+    def __init__(self, payload_type: str = "SAR Radar"):
+        """
+        Initialize the payload subsystem.
+        :param payload_type: Type of payload (default: "SAR Radar")
+        """
+        self.active: bool = False
+        self.payload_type: str = payload_type
         self.power_subsystem = None
         self.comms_subsystem = None
-        self.operating_in_earth_shadow = False  # Simulates eclipse periods in LEO
+        self.operating_in_earth_shadow: bool = False  # Simulates eclipse periods in LEO
 
         # Energy consumption per minute (% battery/min)
         self.payload_consumption = {
@@ -14,18 +18,18 @@ class Payload_Subsystem:
         }
 
         # Total active time (in minutes)
-        self.total_runtime = 0.0
+        self.total_runtime: float = 0.0
 
-    def attach_power(self, power_subsystem):
-        """Connects to the power subsystem"""
+    def attach_power(self, power_subsystem) -> None:
+        """Connects to the power subsystem."""
         self.power_subsystem = power_subsystem
 
-    def attach_comms(self, comms_subsystem):
-        """Connects to the communication subsystem"""
+    def attach_comms(self, comms_subsystem) -> None:
+        """Connects to the communication subsystem."""
         self.comms_subsystem = comms_subsystem
 
-    def activate_payload(self):
-        """Activates the payload if enough power is available"""
+    def activate_payload(self) -> None:
+        """Activates the payload if enough power is available."""
         if not self.power_subsystem or not self.comms_subsystem:
             raise Exception("Subsystems not connected.")
 
@@ -44,8 +48,10 @@ class Payload_Subsystem:
                 skip_summary=False
             )
 
-    def deactivate_payload(self):
-        """Deactivates the payload"""
+    def deactivate_payload(self) -> None:
+        """Deactivates the payload."""
+        if not self.comms_subsystem:
+            raise Exception("Communication subsystem not connected.")
         if self.active:
             self.active = False
             self.comms_subsystem.send_status(
@@ -53,11 +59,14 @@ class Payload_Subsystem:
                 skip_summary=False
             )
 
-    def update_operation(self, dt, in_earth_shadow=False):
+    def update_operation(self, dt: float, in_earth_shadow: bool = False) -> None:
         """
         Updates the payload operation over a time interval (dt in minutes),
         taking into account whether the satellite is in Earth's shadow.
         """
+        if not self.power_subsystem or not self.comms_subsystem:
+            raise Exception("Subsystems not connected.")
+
         self.operating_in_earth_shadow = in_earth_shadow
 
         if self.active:
@@ -79,13 +88,25 @@ class Payload_Subsystem:
                 )
                 self.active = False
 
-    def get_status(self):
-        """Returns current status of the payload"""
+    def get_status(self) -> dict:
+        """Returns current status of the payload."""
         return {
             "payload": self.payload_type,
             "active": self.active,
             "total_runtime_min": self.total_runtime,
             "in_earth_shadow": self.operating_in_earth_shadow
         }
-Payload_Cubesat = Payload_Subsystem("Cloud Seeding Device")
+
+    def reset(self) -> None:
+        """Resets the payload subsystem to initial state."""
+        self.active = False
+        self.total_runtime = 0.0
+        self.operating_in_earth_shadow = False
+
+    def set_payload_type(self, payload_type: str) -> None:
+        """Safely change the payload type if supported."""
+        if payload_type not in self.payload_consumption:
+            raise ValueError(f"Unsupported payload type: {payload_type}")
+        self.payload_type = payload_type
+        self.reset()
 

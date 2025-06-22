@@ -44,6 +44,9 @@ class Spacecraft:
         #Power
         self.power_subsystem.attach_comms(self.comms_subsystem)
 
+        #Payload
+        self.payload_subsystem.attach_power(self.power_subsystem)
+        self.payload_subsystem.attach_comms(self.comms_subsystem)
 
     def get_battery_status(self):
         self.comms_subsystem.send_status(f"[Battery] Current Percentage: {self.power_subsystem.get_battery_level():.2f}%")
