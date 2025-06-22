@@ -91,10 +91,10 @@ class Payload_Subsystem:
     def get_status(self) -> dict:
         """Returns current status of the payload."""
         return {
-            "payload": self.payload_type,
-            "active": self.active,
-            "total_runtime_min": self.total_runtime,
-            "in_earth_shadow": self.operating_in_earth_shadow
+            self.comms_subsystem.send_status(f"{self.payload_type}"),
+            self.comms_subsystem.send_status(f"{self.active}"),
+            self.comms_subsystem.send_status(f"{self.total_runtime}"),
+            self.comms_subsystem.send_status(f"{self.operating_in_earth_shadow}")
         }
 
     def reset(self) -> None:
