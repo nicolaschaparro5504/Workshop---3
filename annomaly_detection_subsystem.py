@@ -27,6 +27,9 @@ class AnomalyDetectionSubsystem:
             self.comms.send_status("[ECLIPSE] Spacecraft is in eclipse (no sunlight). Switching to battery power.")
             self.power.switch_to_battery()
 
+
+
+
 # Example usage (add this to your Spacecraft class):
 # self.anomaly_detection = AnomalyDetectionSubsystem(self.comms_subsystem, self.power_subsystem)
 # self.anomaly_detection.check_sensors(sensor1_ok, sensor2_ok)
