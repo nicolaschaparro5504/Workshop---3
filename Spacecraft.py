@@ -3,6 +3,7 @@ import time
 from power_subsystem import Power_Subsystem
 from altitude_control_subsystem import Altitude_Control_Subsystem
 from comms_subsystem import Communication_Subsystem
+from Payload_Subsystem import Payload_Subsystem
 class Spacecraft:
     def __init__(self, norad_id, name, orbital_altitude, orbital_period, mass, country):
 
@@ -28,6 +29,7 @@ class Spacecraft:
         #Attaching the subsystems
         self.power_subsystem = Power_Subsystem()
         self.comms_subsystem = Communication_Subsystem()
+        self.payload_subsystem = Payload_Subsystem()
 
         #Altitude
 
@@ -42,6 +44,9 @@ class Spacecraft:
         #Power
         self.power_subsystem.attach_comms(self.comms_subsystem)
 
+        #Payload
+        self.payload_subsystem.attach_power(self.power_subsystem)
+        self.payload_subsystem.attach_comms(self.comms_subsystem)
 
     def get_battery_status(self):
         self.comms_subsystem.send_status(
