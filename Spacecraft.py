@@ -3,6 +3,7 @@ import time
 from power_subsystem import Power_Subsystem
 from altitude_control_subsystem import Altitude_Control_Subsystem
 from comms_subsystem import Communication_Subsystem
+from annomaly_detection_subsystem import AnomalyDetectionSubsystem
 from Payload_Subsystem import Payload_Subsystem
 class Spacecraft:
     def __init__(self, norad_id, name, orbital_altitude, orbital_period, mass, country):
@@ -29,8 +30,9 @@ class Spacecraft:
         #Attaching the subsystems
         self.power_subsystem = Power_Subsystem()
         self.comms_subsystem = Communication_Subsystem()
+        self.anomaly_detection = AnomalyDetectionSubsystem(self.comms_subsystem, self.power_subsystem)
         self.payload_subsystem = Payload_Subsystem()
-
+        
         #Altitude
 
         self.altitude_control = Altitude_Control_Subsystem(orbital_altitude)
