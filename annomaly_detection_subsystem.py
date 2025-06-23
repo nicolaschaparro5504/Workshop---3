@@ -3,8 +3,7 @@ class AnomalyDetectionSubsystem:
         self.comms = comms_subsystem
         self.power = power_subsystem
 
-    def check_sensors(self, SAR_Radar_status, Cloud_Seeding_Device_status, Ionospheric_Particle_Collector_status):
-        # Simulate sensor checks (replace with real sensor logic)
+    def check_sensors(self, SAR_Radar_status, Cloud_Seeding_Device_status, Ionospheric_Particle_Collector_status): 
         if not SAR_Radar_status:
             self.comms.send_status("[ALERT #01] SAR Radar malfunction detected! Notifying mission control.")
         if not Cloud_Seeding_Device_status:
@@ -26,11 +25,3 @@ class AnomalyDetectionSubsystem:
         else:
             self.comms.send_status("[ECLIPSE] Spacecraft is in eclipse (no sunlight). Switching to battery power.")
             self.power.switch_to_battery()
-
-
-
-
-# Example usage (add this to your Spacecraft class):
-# self.anomaly_detection = AnomalyDetectionSubsystem(self.comms_subsystem, self.power_subsystem)
-# self.anomaly_detection.check_sensors(sensor1_ok, sensor2_ok) wawa
-# self.anomaly_detection.handle_eclipse(is_sunlight_phase, is_charging)
