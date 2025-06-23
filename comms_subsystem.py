@@ -28,7 +28,7 @@ class Communication_Subsystem:
         if not skip_summary:
             estimated_consumption = 0.005 * char_count
             if self.power_subsystem.consume_energy(estimated_consumption, log=False):
-                print(f"[Power] Message energy cost: -{estimated_consumption:.4f}%")
+                print(f"[Power] Message energy cost: -{estimated_consumption:.4f}%, Battery Level: {self.power_subsystem.get_battery_level():.2f}%")
             else:
                 print("[Power] Not enough battery to send this message.")
 

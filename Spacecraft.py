@@ -90,4 +90,28 @@ class Spacecraft:
                 )
         self.comms_subsystem.send_status("[Orbit] Orbit simulation completed.")
 
+    def activate_payload(self, payload_type):
+        """
+        Activates the payload subsystem with the specified payload type
+        Sensor 1: SAR Radar
+        Sensor 2: Cloud Seeding Device
+        Sensor 3: Ionospheric Particle Collector
+
+        """
+        self.payload_subsystem.set_payload_type(payload_type)
+        self.payload_subsystem.activate_payload()
+
+    def update_payload_operation(self, dt, in_earth_shadow=False):
+        """
+        Updates the payload operation based on the time interval and whether the spacecraft is in Earth's shadow
+        """
+        self.payload_subsystem.update_operation(dt, in_earth_shadow)
+        self.payload_subsystem.get_status()
+
+    def deactivate_payload(self):
+        """
+        Deactivates the payload subsystem
+        """
+        self.payload_subsystem.deactivate_payload()
+
 sc = Spacecraft(1332, "LEO", 200, 2, 400, "USA")

@@ -38,8 +38,9 @@ class Payload_Subsystem:
 
         if self.power_subsystem.consume_energy(0.5, log=False):
             self.active = True
+            battery = self.power_subsystem.get_battery_level()
             self.comms_subsystem.send_status(
-                f"[Payload] {self.payload_type} activated in LEO orbit.",
+                f"[Payload] {self.payload_type} activated in LEO orbit. Battery: {battery:.3f}%",
                 skip_summary=False
             )
         else:
@@ -54,9 +55,11 @@ class Payload_Subsystem:
             raise Exception("Communication subsystem not connected.")
         if self.active:
             self.active = False
+            self.reset()
+            battery = self.power_subsystem.get_battery_level()
             self.comms_subsystem.send_status(
-                f"[Payload] {self.payload_type} deactivated.",
-                skip_summary=False
+                f"[Payload] {self.payload_type} deactivated. Battery: {battery:.3f}%",
+                skip_summary=True
             )
 
     def update_operation(self, dt: float, in_earth_shadow: bool = False) -> None:
@@ -89,13 +92,18 @@ class Payload_Subsystem:
                 self.active = False
 
     def get_status(self) -> dict:
-        """Returns current status of the payload."""
-        return {
-            self.comms_subsystem.send_status(f"{self.payload_type}"),
-            self.comms_subsystem.send_status(f"{self.active}"),
-            self.comms_subsystem.send_status(f"{self.total_runtime}"),
-            self.comms_subsystem.send_status(f"{self.operating_in_earth_shadow}")
-        }
+        """Returns current status of the payload and optionally sends a summary."""
+        status_info = {
+            "Payload Type": self.payload_type,
+            "Active": self.active,
+            "Total Runtime (min)": self.total_runtime,
+            "In Earth's Shadow": self.operating_in_earth_shadow
+    }
+        summary = ", ".join(f"{key}: {value}" for key, value in status_info.items())
+        self.comms_subsystem.send_status(f"[Payload Status] {summary}", skip_summary=True)
+
+        return status_info
+
 
     def reset(self) -> None:
         """Resets the payload subsystem to initial state."""
