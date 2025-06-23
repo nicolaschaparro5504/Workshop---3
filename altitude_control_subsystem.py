@@ -25,7 +25,7 @@ class Altitude_Control_Subsystem:
         delta = abs(target_altitude - self.altitude)
         energy_needed = delta * 0.1  # 0.1 units of power per km changed
 
-        self.comm_system.send_status(f"[Altitude] Manuvering from {self.altitude} km to {target_altitude} km, (Δ={delta} km)")
+        self.comm_system.send_status(f"[Altitude] Maneuvering from {self.altitude} km to {target_altitude} km, (Δ={delta} km)")
         self.comm_system.send_status(f"[Altitude] Battery needed: {energy_needed:.2f}%")
 
         if self.power_system.consume_energy(energy_needed): # Calls the power subsystem to consume energy
@@ -39,10 +39,16 @@ class Altitude_Control_Subsystem:
         if self.power_system.get_battery_level() < 30: # Calls the power subsytem if the battery is low to start solar charge
             self.comm_system.send_status("[Power] Charging...")
             minuto = 1
-            while self.power_system.battery_level < 80:
-                self.comm_system.send_status(f"[Time] → Minute {minuto}")
+            max_minutos = 1000  # Security limit to avoid infinite loops
+            while self.power_system.battery_level < 95 and minuto <= max_minutos:
+                self.comm_system.send_status(f"[Time] → Minute {minuto}", skip_summary=True)
                 self.power_system.update_power(1)  # 1 minute simulated
                 minuto += 1
+            if minuto > max_minutos:
+                self.comm_system.send_status("[ERROR] Charging loop exceeded safe limit.", skip_summary=True)
+            self.comm_system.send_status("[Power] Charging cycle completed. Battery at 95%.")
+            # Final message with total charging time
+            self.comm_system.send_status(f"[Power] Total charging time: {minuto-1} minutes", skip_summary=True)
 
 
     def update_orientation(self, target_orientation):
@@ -69,14 +75,17 @@ class Altitude_Control_Subsystem:
         self.comm_system.send_status(f"[Power] Battery Level: {self.power_system.get_battery_level():.2f} %")
 
         if self.power_system.get_battery_level() < 30:
-            self.comm_system.send_status("[Power] Charging...")
+            self.comm_system.send_status("[Power] Charging...", skip_summary=True)
             minuto = 1
-            while self.power_system.battery_level < 80:
-                self.comm_system.send_status(f"[Time] → Minute {minuto}")
+            max_minutos = 1000
+            while self.power_system.battery_level < 95 and minuto <= max_minutos:
+                self.comm_system.send_status(f"[Time] → Minute {minuto}", skip_summary=True)
                 self.power_system.update_power(1)
                 minuto += 1
+            if minuto > max_minutos:
+                self.comm_system.send_status("[ERROR] Charging loop exceeded safe limit.", skip_summary=True)
+            self.comm_system.send_status("[Power] Charging cycle completed.")
 
     def report_ACS(self):
         self.comm_system.send_status(f"[Altitude] Current altitude: {self.altitude} km")
         self.comm_system.send_status(f"[Orientation] Current orientation: {self.orientation}")
-        

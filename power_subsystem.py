@@ -3,7 +3,7 @@ class Power_Subsystem:
         self.battery_level = 100.0
         self.solar_charging = False
         self.consumption_rate = 0.5  # Consuption per minute
-        self.charge_rate = 0.1       # Charge per minute
+        self.charge_rate = 2.5      # Charge per minute
 
     def attach_comms(self, comms_subsystem):
         """Connects the communication subsystem"""
@@ -51,14 +51,14 @@ class Power_Subsystem:
 
     def consume_energy(self, amount, log=True):
         """Method to update the power wherever an action is performed"""
-        if self.battery_level >= amount:
-            self.battery_level -= amount
+        if self.battery_level > 0:
+            consumed = min(self.battery_level, amount)
+            self.battery_level -= consumed
             if log:
                 self.comms_subsystem.send_status(
-                    f"[Power] Action Consumption: -{amount:.2f}%, Battery Level: {self.battery_level:.2f}%",
+                    f"[Power] Action Consumption: -{consumed:.2f}%, Battery Level: {self.battery_level:.2f}%",
                     skip_summary=True
                 )
-
             # Check again if battery is low after the action
             if self.battery_level < 30 and not self.solar_charging:
                 self.solar_charging = True
