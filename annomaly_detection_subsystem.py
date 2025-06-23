@@ -3,14 +3,14 @@ class AnomalyDetectionSubsystem:
         self.comms = comms_subsystem
         self.power = power_subsystem
 
-    def check_sensors(self, sensor1_status, sensor2_status, sensor3_status):
+    def check_sensors(self, SAR_Radar_status, Cloud_Seeding_Device_status, Ionospheric_Particle_Collector_status):
         # Simulate sensor checks (replace with real sensor logic)
-        if not sensor1_status:
-            self.comms.send_status("[ALERT #01] Sensor 1 malfunction detected! Notifying mission control.")
-        if not sensor2_status:
-            self.comms.send_status("[ALERT #02] Sensor 2 malfunction detected! Notifying mission control.")
-        if not sensor3_status:
-            self.comms.send_status("[ALERT #03] Sensor 3 malfunction detected! Notifying mission control.")
+        if not SAR_Radar_status:
+            self.comms.send_status("[ALERT #01] SAR Radar malfunction detected! Notifying mission control.")
+        if not Cloud_Seeding_Device_status:
+            self.comms.send_status("[ALERT #02] Cloud Seeding Device malfunction detected! Notifying mission control.")
+        if not Ionospheric_Particle_Collector_status:
+            self.comms.send_status("[ALERT #03] Ionospheric_Particle_Collector malfunction detected! Notifying mission control.")
 
     def handle_eclipse(self, is_sunlight_phase, is_charging):
         """
@@ -32,4 +32,5 @@ class AnomalyDetectionSubsystem:
 
 # Example usage (add this to your Spacecraft class):
 # self.anomaly_detection = AnomalyDetectionSubsystem(self.comms_subsystem, self.power_subsystem)
-# self.anomaly_detection.check_sensors(sensor1_ok, sensor2_ok)
+# self.anomaly_detection.check_sensors(sensor1_ok, sensor2_ok) wawa
+# self.anomaly_detection.handle_eclipse(is_sunlight_phase, is_charging)
