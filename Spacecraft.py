@@ -30,8 +30,10 @@ class Spacecraft:
         #Attaching the subsystems
         self.power_subsystem = Power_Subsystem()
         self.comms_subsystem = Communication_Subsystem()
-        self.anomaly_detection = AnomalyDetectionSubsystem(self.comms_subsystem, self.power_subsystem)
         self.payload_subsystem = Payload_Subsystem()
+
+        self.anomaly_detection = AnomalyDetectionSubsystem(self.comms_subsystem, self.power_subsystem, self.payload_subsystem)
+        
         
         #Altitude
 
@@ -115,5 +117,14 @@ class Spacecraft:
         Deactivates the payload subsystem
         """
         self.payload_subsystem.deactivate_payload()
+        
+    def check_anomalies(self):
+        """
+        Checks for anomalies in the payload and power subsystems
+        """
+        self.anomaly_detection.check_active_payload()
+
+    def handle_eclipse(self, is_sunlight_phase, is_charging):
+        self.anomaly_detection.handle_eclipse(is_sunlight_phase, is_charging)
 
 sc = Spacecraft(1332, "LEO", 200, 2, 400, "USA")

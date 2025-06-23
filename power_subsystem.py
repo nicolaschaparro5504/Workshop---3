@@ -1,9 +1,19 @@
-class Power_Subsystem:
+from subsystems_base import Subsystem
+class Power_Subsystem (Subsystem):
     def __init__(self):
         self.battery_level = 100.0
         self.solar_charging = False
         self.consumption_rate = 0.5  # Consuption per minute
         self.charge_rate = 2.5      # Charge per minute
+
+    def switch_to_solar(self):
+        self.using_solar = True
+
+    def switch_to_battery(self):
+        self.using_solar = False
+
+    def is_charging(self):
+        return self.using_solar
 
     def attach_comms(self, comms_subsystem):
         """Connects the communication subsystem"""
@@ -72,3 +82,4 @@ class Power_Subsystem:
     def get_battery_level(self):
         """Method to check the battery level at any time"""
         return self.battery_level
+    

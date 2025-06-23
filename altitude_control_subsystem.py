@@ -1,6 +1,7 @@
 from power_subsystem import Power_Subsystem
+from subsystems_base import Subsystem
 
-class Altitude_Control_Subsystem:
+class Altitude_Control_Subsystem(Subsystem):
     def __init__(self, altitude):
         self.orientation = [0, 0, 0] #Pitch, Roll, Yaw
         self.altitude = altitude

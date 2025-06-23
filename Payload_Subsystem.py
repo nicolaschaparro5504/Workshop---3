@@ -1,4 +1,5 @@
-class Payload_Subsystem:
+from subsystems_base import Subsystem
+class Payload_Subsystem (Subsystem):
     def __init__(self, payload_type: str = "SAR Radar"):
         """
         Initialize the payload subsystem.

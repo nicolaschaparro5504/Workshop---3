@@ -1,5 +1,7 @@
-class Communication_Subsystem:
+from subsystems_base import Subsystem
+class Communication_Subsystem (Subsystem):
     def __init__(self):
+        super().__init__()
         self.connected = True
         self.power_subsystem = None
         self.sent_chars = []  # Creates an empty list ready to save the total length

@@ -1,15 +1,27 @@
-class AnomalyDetectionSubsystem:
-    def __init__(self, comms_subsystem, power_subsystem):
+from subsystems_base import Subsystem
+
+class AnomalyDetectionSubsystem (Subsystem):
+    def __init__(self, comms_subsystem, power_subsystem, payload_subsystem):
         self.comms = comms_subsystem
         self.power = power_subsystem
+        self.payload = payload_subsystem
 
-    def check_sensors(self, SAR_Radar_status, Cloud_Seeding_Device_status, Ionospheric_Particle_Collector_status): 
-        if not SAR_Radar_status:
-            self.comms.send_status("[ALERT #01] SAR Radar malfunction detected! Notifying mission control.")
-        if not Cloud_Seeding_Device_status:
-            self.comms.send_status("[ALERT #02] Cloud Seeding Device malfunction detected! Notifying mission control.")
-        if not Ionospheric_Particle_Collector_status:
-            self.comms.send_status("[ALERT #03] Ionospheric_Particle_Collector malfunction detected! Notifying mission control.")
+    def check_active_payload(self):
+    
+        """
+        Checks the currently active payload and sends status message.
+        """
+        payload_type = self.payload.payload_type
+        is_active = self.payload.active
+
+        if not is_active:
+            self.comms.send_status(
+            f"[ALERT] {payload_type} malfunction detected! Payload inactive."
+        )
+        else:
+            self.comms.send_status(
+            f"[STATUS] {payload_type} functioning normally. Payload is active."
+        )
 
     def handle_eclipse(self, is_sunlight_phase, is_charging):
         """
