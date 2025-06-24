@@ -68,7 +68,6 @@ class Spacecraft:
 
     def send_message(self, message):
         self.comms_subsystem.send_status(message)
-        # Mostrar batería restante después de enviar el mensaje
         self.comms_subsystem.send_status(
             f"[Battery] Remaining: {self.power_subsystem.get_battery_level():.3f}%",
         skip_summary=True)
@@ -77,6 +76,8 @@ class Spacecraft:
         self.comms_subsystem.send_status(f"Spacecraft: {self.name} (NORAD ID: {self.norad_id})")
         self.altitude_control.report_ACS()
         self.get_battery_status()
+        self.payload_subsystem.get_status()
+        self.check_anomalies()
 
     def simulate_orbit(self):
         """
@@ -85,7 +86,7 @@ class Spacecraft:
         total_minutes = int(self.orbital_period * 60)
         self.comms_subsystem.send_status(f"[Orbit] Starting orbit simulation for {total_minutes} minutes.")
         for minute in range(1, total_minutes + 1):
-            # Simula consumo por sistemas básicos (ajusta el valor según tu modelo)
+            # Simulates the consumption of energy for each minute
             self.power_subsystem.consume_energy(0.2, log=False)
             if minute % 60 == 0 or minute == total_minutes:
                 self.comms_subsystem.send_status(
