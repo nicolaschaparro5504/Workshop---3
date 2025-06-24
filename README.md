@@ -93,6 +93,7 @@ communication_subsystem.py
 payload_subsystem.py
 altitude_control_subsystem.py
 anomaly_detection_subsystem.py
+subsystems_base.py
 
 ## Requirements
 Python 3.7+
