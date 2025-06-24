@@ -49,7 +49,7 @@ git clone https://github.com/nicolaschaparro5504/Workshop---3.git
 
 
 ### 1. Define the Spacecraft Object
-Test_1=Spacecraf(norad_id, name, orbital_altitude, orbital_period, mass, country)
+Test_1=Spacecraft(norad_id, name, orbital_altitude, orbital_period, mass, country)
 
 ### 2. Activate Payload
 Activates the payload subsystem with the specified payload type
